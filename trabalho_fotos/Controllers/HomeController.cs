@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using trabalho_fotos.Models;
+using trabalho_CEP.Models;
 
-namespace trabalho_fotos.Controllers
+namespace trabalho_CEP.Controllers
 {
     public class HomeController : Controller
     {

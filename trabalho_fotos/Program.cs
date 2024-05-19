@@ -1,7 +1,20 @@
+using BuscaCEP.Service;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<trabalho_fotos.Data.ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder
+        .Configuration
+        .GetConnectionString("DbClientFotos"));
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<CorreiosService>();
 
 var app = builder.Build();
 

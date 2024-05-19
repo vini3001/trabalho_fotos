@@ -1,4 +1,4 @@
-namespace trabalho_fotos.Models
+namespace trabalho_CEP.Models
 {
     public class ErrorViewModel
     {

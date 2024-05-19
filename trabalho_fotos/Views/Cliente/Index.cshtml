@@ -1,0 +1,101 @@
+﻿@model IEnumerable<trabalho_fotos.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Criar conta</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Criar conta</a>
+</p>
+<table class="table" style="width: 100vw">
+    <thead>
+        <tr>
+            <th>
+                Nome
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Telefone
+            </th>
+            <th>
+                CPF
+            </th>
+            <th>
+                Foto
+            </th>
+            <th>
+                Rua
+            </th>
+            <th>
+                Nº
+            </th>
+            <th>
+                CEP
+            </th>
+            <th>
+                UF
+            </th>
+            <th>
+                Cidade
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cpf)
+            </td>
+            <td>
+                    @{
+                        try
+                        {
+                            var base64 = Convert.ToBase64String(@item.Photo);
+                            if (!string.IsNullOrEmpty(base64))
+                            {
+                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                                <img class="img-fluid" src="@imgSrc" width="70"/>
+                            }
+                        }
+                        catch
+                        {
+                            <img class="img-fluid" src="https://png.pngtree.com/png-vector/20191110/ourmid/pngtree-avatar-icon-profile-icon-member-login-vector-isolated-png-image_1978396.jpg" width="70" />
+                        }
+                    }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Street)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StreetNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cep)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+                <td style="flex-wrap:nowrap">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Editar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

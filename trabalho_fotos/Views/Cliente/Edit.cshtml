@@ -1,0 +1,180 @@
+﻿@model trabalho_fotos.Models.Cliente
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Editar Cadastro</h1>
+
+<style>
+    #imgLoaded {
+        position: relative;
+        z-index: 1;
+    }
+
+    #Img {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 2;
+    }
+
+    #containerImg {
+        position: relative;
+    }
+</style>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label">Telefone</label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cpf" class="control-label">CPF</label>
+                <input asp-for="Cpf" class="form-control" />
+                <span asp-validation-for="Cpf" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label">Foto de perfil</label>
+                <div id="containerImg">
+                    @{
+                        try
+                        {
+                            var base64 = Convert.ToBase64String(@Model.Photo);
+                            if (!string.IsNullOrEmpty(base64))
+                            {
+                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                                <img id="imgLoaded" class="img-fluid" src="@imgSrc" width="40%" height="fit-content" />
+                            }
+                        }
+                        catch
+                        {
+                            <img id="imgLoaded" class="img-fluid" src="https://png.pngtree.com/png-vector/20191110/ourmid/pngtree-avatar-icon-profile-icon-member-login-vector-isolated-png-image_1978396.jpg" width="70" />
+                        }
+                    }
+                    <input type="file" name="Img" id="Img" class="form-control" onchange=""/>
+                </div>
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            @if (ViewBag.endereco != null)
+            {
+                <div class="form-group">
+                    <label asp-for="Cep" class="control-label"></label>
+                    <input asp-for="Cep" value=@ViewBag.endereco.Cep class="form-control" />
+                    <span asp-validation-for="Cep" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Street" class="control-label">Rua</label>
+                    <input id="Street" value=@ViewBag.endereco.Logradouro asp-for="Street" class="form-control" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StreetNumber" class="control-label">Número</label>
+                    <input id="StreetNumber" asp-for="StreetNumber" class="form-control" />
+                    <span asp-validation-for="StreetNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="State" class="control-label">UF</label>
+                    <input id="State" value=@ViewBag.endereco.Uf asp-for="State" class="form-control" />
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="City" class="control-label">Cidade</label>
+                    <input id="City" value=@ViewBag.endereco.Localidade asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="Cep" class="control-label"></label>
+                    <input asp-for="Cep" class="form-control" />
+                    <span asp-validation-for="Cep" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Street" class="control-label">Rua</label>
+                    <input id="Street" asp-for="Street" class="form-control" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StreetNumber" class="control-label">Número</label>
+                    <input id="StreetNumber" asp-for="StreetNumber" class="form-control"  />
+                    <span asp-validation-for="StreetNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="State" class="control-label">UF</label>
+                    <input id="State" asp-for="State" class="form-control" />
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="City" class="control-label">Cidade</label>
+                    <input id="City" asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group" style="margin-top: 5px;">
+                <input type="submit" value="Editar" class="btn btn-primary" />
+                <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger">Deletar</a>
+                <a class="btn btn-secondary" asp-action="Index">Voltar</a>
+            </div>
+        </form>
+        <span id="loader" style="display:none;">
+            <img src="~/img/loading.gif" alt="Carregando..." class="img-fluid" style="width30px;" />
+        </span>
+    </div>
+</div>
+
+@if (ViewBag.endereco != null)
+{
+
+}
+else
+{
+    <div id="mensagem">
+        <h3>
+            @Html.Raw(TempData["Mensagem"])<br />
+        </h3>
+    </div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.getElementById('Img').addEventListener('change', function () {
+        var file = this.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('imgLoaded').src = e.target.result;
+            document.getElementById('imgLoaded').style.display = 'inline';
+        };
+        reader.readAsDataURL(file);
+    });
+    $(document).ready(function () {
+        $("#form-cep").submit(function () {
+            //exibe o carregamento
+            $("#loader").show();
+            //esconder o botão
+            $("#btnBuscar").replaceWith(loader);
+        })
+    })
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

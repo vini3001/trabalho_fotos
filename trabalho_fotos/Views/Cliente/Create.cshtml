@@ -1,0 +1,141 @@
+﻿@model trabalho_fotos.Models.Cliente
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Cadastro de usuário</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="form-cep" method="post" action="@Url.Action("BuscarEnderecoPorCep", "Cliente")">
+            <div class="form-group">
+                <label asp-for="Cep" class="control-label">Digite o seu CEP: </label>
+                <input asp-for="Cep" class="form-control" />
+                <span asp-validation-for="Cep" class="text-danger"></span>
+                <div class="form-group">
+                    <input type="submit" style="margin-top: 5px;" id="btnBuscar" value="Buscar" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label">Telefone</label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cpf" class="control-label">CPF</label>
+                <input asp-for="Cpf" class="form-control" />
+                <span asp-validation-for="Cpf" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label">Foto de perfil</label>
+                <input type="file" name="Img" id="Img" class="form-control"/>
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            @if(ViewBag.endereco != null) {
+                <div class="form-group">
+                    <label asp-for="Cep" class="control-label"></label>
+                    <input asp-for="Cep" value=@ViewBag.endereco.Cep class="form-control" disabled="disabled" />
+                    <span asp-validation-for="Cep" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Street" class="control-label">Rua</label>
+                    <input id="Street" value=@ViewBag.endereco.Logradouro asp-for="Street" disabled="disabled" class="form-control" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StreetNumber" class="control-label">Número</label>
+                    <input id="StreetNumber" asp-for="StreetNumber" class="form-control" />
+                    <span asp-validation-for="StreetNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="State" class="control-label">UF</label>
+                    <input id="State" value=@ViewBag.endereco.Uf asp-for="State" disabled="disabled" class="form-control" />
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="City" class="control-label">Cidade</label>
+                    <input id="City" value=@ViewBag.endereco.Localidade asp-for="City" disabled="disabled" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            } else
+            {
+                <div class="form-group">
+                    <label asp-for="Cep" class="control-label"></label>
+                    <input asp-for="Cep" class="form-control" disabled="disabled" />
+                    <span asp-validation-for="Cep" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Street" class="control-label">Rua</label>
+                    <input id="Street" asp-for="Street" class="form-control" disabled="disabled" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StreetNumber" class="control-label">Número</label>
+                    <input id="StreetNumber" asp-for="StreetNumber" class="form-control" disabled="disabled" />
+                    <span asp-validation-for="StreetNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="State" class="control-label">UF</label>
+                    <input id="State" asp-for="State" class="form-control" disabled="disabled" />
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="City" class="control-label">Cidade</label>
+                    <input id="City" asp-for="City" class="form-control" disabled="disabled" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group" style="margin-top: 5px;">
+                <input type="submit" value="Registrar" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-action="Index">Voltar</a>
+            </div>
+        </form>
+        <span id="loader" style="display:none;">
+            <img src="~/img/loading.gif" alt="Carregando..." class="img-fluid" style="width30px;" />
+        </span>
+    </div>
+</div>
+
+@if (ViewBag.endereco != null)
+{
+    
+}
+else
+{
+    <div id="mensagem">
+        <h3>
+            @Html.Raw(TempData["Mensagem"])<br />
+        </h3>
+    </div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+     $(document).ready(function () {
+         $("#form-cep").submit(function () {
+             //exibe o carregamento
+             $("#loader").show();
+             //esconder o botão
+             $("#btnBuscar").replaceWith(loader);
+         })
+     })
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

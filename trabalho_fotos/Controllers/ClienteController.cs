@@ -1,6 +1,7 @@
 ﻿using BuscaCEP.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using trabalho_fotos.Data;
 using trabalho_fotos.Models;
 
@@ -22,6 +23,33 @@ namespace trabalho_fotos.Controllers
             return View(await _context.Clientes.ToListAsync());
         }
 
+        public async Task<IActionResult> Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(Cliente cliente)
+        {
+            var findCliente = await _context.Clientes.FirstOrDefaultAsync(cli => cli.Email == cliente.Email);
+
+            if(findCliente == null)
+            {
+                TempData["Message"] = "Usuário não encontrado!";
+                return View("Login");
+            }
+
+            var verifyPassword = findCliente.Password == cliente.Password;
+
+            if (!verifyPassword)
+            {
+                TempData["Message"] = "Senha incorreta!";
+                return View("Login");
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
 
         public IActionResult Create()
         {

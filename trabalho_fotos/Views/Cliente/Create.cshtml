@@ -6,6 +6,29 @@
 
 <h1>Cadastro de usuário</h1>
 
+<style>
+    #imgLoaded {
+        position: relative;
+        z-index: 1;
+    }
+
+    #Img {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 2;
+    }
+
+    #containerImg {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+</style>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,7 +45,7 @@
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">Nome</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
@@ -30,6 +53,11 @@
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Senha</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label">Telefone</label>
@@ -42,9 +70,25 @@
                 <span asp-validation-for="Cpf" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Photo" class="control-label">Foto de perfil</label>
-                <input type="file" name="Img" id="Img" class="form-control"/>
-                <span asp-validation-for="Photo" class="text-danger"></span>
+                <div id="containerImg">
+                    <label asp-for="Photo" class="control-label">Foto</label>
+                    @{
+                        try
+                        {
+                            var base64 = Convert.ToBase64String(@Model.Photo);
+                            if (!string.IsNullOrEmpty(base64))
+                            {
+                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                                <img id="imgLoaded" class="img-fluid" src="@imgSrc" width="40%" height="fit-content" />
+                            }
+                        }
+                        catch
+                        {
+                            <img id="imgLoaded" class="img-fluid" src="https://png.pngtree.com/png-vector/20191110/ourmid/pngtree-avatar-icon-profile-icon-member-login-vector-isolated-png-image_1978396.jpg" width="70" />
+                        }
+                    }
+                    <input type="file" name="Img" id="Img" class="form-control" onchange="" />
+                </div>
             </div>
             @if(ViewBag.endereco != null) {
                 <div class="form-group">
@@ -126,6 +170,16 @@ else
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    document.getElementById('Img').addEventListener('change', function () {
+        var file = this.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('imgLoaded').src = e.target.result;
+            document.getElementById('imgLoaded').style.display = 'inline';
+        };
+        reader.readAsDataURL(file);
+    });
+
      $(document).ready(function () {
          $("#form-cep").submit(function () {
              //exibe o carregamento
